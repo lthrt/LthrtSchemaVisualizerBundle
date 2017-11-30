@@ -1,0 +1,39 @@
+{
+    "name": "lthrt/schema-visualizer-bundle",
+    "description": "Schema Visualizer Bundle for Symfony2",
+    "keywords": [
+        "lthrt",
+        "schema",
+        "visualization",
+        "bundle"
+    ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/lthrt/LthrtEntityBundle.git"
+        }
+    ],
+    "homepage": "https://github.com/lthrt/LthrtSchemaVisualizerBundle",
+    "license": "MIT",
+    "type": "symfony-bundle",
+    "authors": [
+        {
+            "name": "lthrt",
+            "email": "lighthart.coder@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.2",
+        "lthrt/entity-bundle": "dev-master"
+    },
+    "require-dev": {
+        "symfony/framework-bundle": "~2.7"
+    },
+    "autoload": {
+        "psr-0": {
+            "Lthrt\\SchemaVisualizerBundle": ""
+        }
+    },
+    "minimum-stability": "dev",
+    "target-dir": "Lthrt/SchemaVisualizerBundle"
+}

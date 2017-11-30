@@ -1,0 +1,9 @@
+{% include 'LthrtSchemaVisualizerBundle:Schema:links.html.twig' %}
+
+<ul>
+    {% for class in classes %}
+        <li>
+            <a href="{{ path('json_schema', { 'class': class }) }}">{{class}}</a>
+        </li>
+    {% endfor %}
+</ul>

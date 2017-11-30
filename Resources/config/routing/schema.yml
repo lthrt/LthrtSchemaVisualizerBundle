@@ -1,0 +1,19 @@
+graph_schema:
+    path:     /graph/{depth}/{class}
+    defaults: { _controller: "LthrtSchemaVisualizerBundle:Schema:dagre", class : 0, depth: 0 }
+
+graphml_schema:
+    path:     /graphml/{depth}/{class}
+    defaults: { _controller: "LthrtSchemaVisualizerBundle:Schema:graphml", class : 0, depth: 0 }
+
+json_schema:
+    path:     /json/{depth}/{class}
+    defaults: { _controller: "LthrtSchemaVisualizerBundle:Schema:json", class : 0, depth: 0 }
+
+list_schema:
+    path:     /
+    defaults: { _controller: "LthrtSchemaVisualizerBundle:Schema:list" }
+
+old_graph_schema:
+    path:     /oldgraph/{depth}/{class}
+    defaults: { _controller: "LthrtSchemaVisualizerBundle:Schema:graph", class : 0, depth: 0 }

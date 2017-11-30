@@ -1,0 +1,89 @@
+{% set json = json|json_decode %}
+graph
+[
+    hierarchic  1
+    label   ""
+    directed    1
+    {% for node in json.nodes %}
+                {% set fields = [] %}
+        {%- for field in node.fields %}
+            {% if field not in ['id', 'created', 'updated', 'log'] %}
+                {% set fields = fields|merge([field])%}
+            {% endif %}
+        {% endfor -%}
+        node
+        [
+            id  "{{node.class}}"
+            label  "{{node.name}}"
+            graphics [
+                h {{ 20 }}
+                h {{ 20 + 18 * fields|length }}
+                w {{ 12 * (node.name|length < 12 ? 12 : node.name|length) }}
+                customconfiguration "com.yworks.entityRelationship.big_entity"
+                outline "#000000"
+            ]
+            LabelGraphics
+            [
+                text    "{{node.name}}"
+                fill    "#B7C9E3"
+                fontSize    12
+                fontName    "Dialog"
+                configuration   "com.yworks.entityRelationship.label.name"
+                anchor  "t"
+                borderDistance  1
+            ]
+            {# LabelGraphics
+            [
+                text    "
+{%- for field in fields %}{{field}}<br/>
+{% endfor -%}
+                "
+                fontSize    12
+                fontName    "Dialog"
+                alignment   "left"
+                anchor  "bl"
+                configuration   "com.yworks.entityRelationship.label.attributes"
+                borderDistance  1
+            ] #}
+        ]
+    {% endfor %}
+        {% for key, edge in json.edges %}
+            {% if edge.many is defined and edge.many|length > 1 %}
+                edge
+                [
+                    source "{{edge.many[0]}}"
+                    target "{{edge.many[1]}}"
+                    graphics
+                    [
+                        fill    "#000000"
+                        sourceArrow "crows_foot_many"
+                        targetArrow "crows_foot_many"
+                    ]
+                ]
+            {% elseif edge.one is defined and edge.one|length > 1 %}
+                edge
+                [
+                    source "{{edge.one[0]}}"
+                    target "{{edge.one[1]}}"
+                    graphics
+                    [
+                        fill    "#000000"
+                        sourceArrow "crows_foot_one"
+                        targetArrow "crows_foot_one"
+                    ]
+                ]
+            {% else %}
+                edge
+                [
+                    source "{{edge.one[0]}}"
+                    target "{{edge.many[0]}}"
+                    graphics
+                    [
+                        fill    "#000000"
+                        sourceArrow "crows_foot_one"
+                        targetArrow "crows_foot_many"
+                    ]
+                ]
+            {% endif %}
+        {% endfor %}
+]

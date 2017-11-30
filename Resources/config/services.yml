@@ -1,0 +1,10 @@
+services:
+    lthrt_schema_visualizer.representation_service:
+       class: Lthrt\SchemaVisualizerBundle\Services\RepresentationService
+       arguments: ["@doctrine.orm.entity_manager", "@router"]
+
+    lthrt_schema_visualizer.twig_extension:
+        class: Lthrt\SchemaVisualizerBundle\Twig\ClassNameExtension
+        public: false
+        tags:
+            - { name: twig.extension }

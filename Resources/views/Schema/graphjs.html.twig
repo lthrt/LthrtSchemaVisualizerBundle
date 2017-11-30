@@ -1,0 +1,132 @@
+<link rel="stylesheet" type="text/css" href="/eval/bundles/lthrtschemavisualizer/css/joint.min.css" />
+<script src="/eval/bundles/lthrtschemavisualizer/js/jquery.min.js"></script>
+<script src="/eval/bundles/lthrtschemavisualizer/js/lodash.min.js"></script>
+<script src="/eval/bundles/lthrtschemavisualizer/js/backbone-min.js"></script>
+<script src="/eval/bundles/lthrtschemavisualizer/js/joint.min.js"></script>
+<script src="/eval/bundles/lthrtschemavisualizer/js/joint.layout.DirectedGraph.min.js"></script>
+<script>
+
+
+var adjacencyList={{adjacencyList|raw}};
+var depth = {{depth}};
+
+function className(className) {
+  className = className.split('_');
+  className = className[className.length-1];
+  return className;
+}
+
+function buildGraphFromAdjacencyList(adjacencyList, depth) {
+  var elements = [];
+  var links = [];
+  _.each(adjacencyList, function(edges, parentElementLabel) {
+    elements.push(makeElement(parentElementLabel, depth));
+
+    _.each(edges, function(childElementLabel) {
+      links.push(makeLink(parentElementLabel, childElementLabel));
+    });
+  });
+
+    // Links must be added after all the elements. This is because when the links
+    // are added to the graph, link source/target
+    // elements must be in the graph already.
+    return elements.concat(links);
+  }
+
+  function makeLink(parentElementLabel, childElementLabel) {
+    if (childElementLabel!=0) {
+      return new joint.dia.Link({
+        source: { id: parentElementLabel },
+        target: { id: childElementLabel },
+        attrs: { '.marker-target': { d: 'M 4 0 L 0 2 L 4 4 z' } },
+        smooth: true
+      });
+    }
+  }
+
+  joint.shapes.custom = {};
+
+  joint.shapes.custom.ElementLink = joint.shapes.basic.Rect.extend({
+    // Note the `<a>` SVG element surrounding the rest of the markup.
+    markup: '<a><g class="rotatable"><g class="scalable"><rect/></g><text/></g></a>',
+    defaults: joint.util.deepSupplement({
+      type: 'custom.ElementLink'
+    }, joint.shapes.basic.Rect.prototype.defaults)
+  });
+
+  joint.shapes.custom.ElementLabelLink = joint.shapes.basic.Rect.extend({
+      // Note the `<a>` SVG element surrounding the rest of the markup.
+      markup: '<g class="rotatable"><g class="scalable"><rect/></g><a><text/></a></g>',
+      defaults: joint.util.deepSupplement({
+          type: 'custom.ElementLabelLink'
+      }, joint.shapes.basic.Rect.prototype.defaults)
+  });
+
+
+  function makeElement(label, depth) {
+    labelName = className(label);
+
+    var maxLineLength = _.max(labelName.split('\n'), function(l) { return l.length; }).length;
+
+    // Compute width/height of the rectangle based on the number
+    // of lines in the label and the letter size. 0.6 * letterSize is
+    // an approximation of the monospace font letter width.
+    var letterSize = 8;
+    var width = 2 * (letterSize * (0.6 * maxLineLength + 1));
+    var height = 2 * ((labelName.split('\n').length + 1) * letterSize);
+
+
+    return new joint.shapes.custom.ElementLabelLink({
+      id: label,
+      size: { width: width, height: height },
+      attrs: {
+        a    : { "xlink:href" : "{{ path('json_schema') }}"+"/"+depth+"/"+label, "cursor": "pointer" },
+        text : { "text": labelName, "font-size": "letterSize", "font-family": "monospace" },
+        rect : {
+          width: width, height: height,
+          rx: 5, ry: 5,
+          stroke: '#555'
+        }
+      }
+    });
+  }
+
+// Main.
+// -----
+
+var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+
+var graph = new joint.dia.Graph;
+
+var paper = new joint.dia.Paper({
+
+  el: $('#paper'),
+  width: w,
+  height: h,
+  gridSize: 1,
+  model: graph
+});
+
+function layout() {
+
+    // try {
+    //     var adjacencyList = eval('adjacencyList = ' + $('#adjacency-list').val());
+    // } catch (e) { alert(e); }
+
+    var cells = buildGraphFromAdjacencyList(adjacencyList, depth);
+    graph.resetCells(cells);
+    joint.layout.DirectedGraph.layout(graph, {
+      setLinkVertices: false,
+      rankDir: "LR",
+      rankSep: 10,
+      nodeSep: 10,
+      edgeSep: 10
+    });
+  }
+
+  $(window).ready(function(){
+    layout();
+  });
+
+  </script>

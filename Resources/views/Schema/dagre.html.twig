@@ -1,0 +1,13 @@
+{% include 'LthrtSchemaVisualizerBundle:Schema:graphcss.html.twig' %}
+{% include 'LthrtSchemaVisualizerBundle:Schema:links.html.twig' %}
+{% if class is defined and class %}
+  <ul>
+    <li>
+      <a href="{{ path('json_schema', {'class' : class }) }}">JSON for {{class|className}}</a>
+    </li>
+  </ul>
+{% endif %}
+<svg width=960 height=600><g/></svg>
+{# {{ adjacencyList|json_pretty|raw }} #}
+{# This one is the page-specific layout #}
+{% include 'LthrtSchemaVisualizerBundle:Schema:dagred3js.html.twig' %}

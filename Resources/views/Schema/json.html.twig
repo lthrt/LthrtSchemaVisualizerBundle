@@ -1,0 +1,14 @@
+{% include 'LthrtSchemaVisualizerBundle:Schema:graphcss.html.twig' %}
+{% include 'LthrtSchemaVisualizerBundle:Schema:dagre.html.twig' with {'depth' : depth, 'adjacencyList' : adjacencyList } %}
+<table>
+  <tr>
+    <td class="json">
+        <div class="json">
+            {% if class is defined and class %}
+              {{ class }}
+          {% endif %}
+          {{ json|json_pretty|raw }}
+        </div>
+    </td>
+  </tr>
+</table>

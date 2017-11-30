@@ -1,0 +1,12 @@
+{% include 'LthrtSchemaVisualizerBundle:Schema:graphcss.html.twig' %}
+{% include 'LthrtSchemaVisualizerBundle:Schema:links.html.twig' %}
+{% if class is defined and class %}
+  <ul>
+    <li>
+      <a href="{{ path('json_schema', {'class' : class }) }}">JSON for {{class|className}}</a>
+    </li>
+  </ul>
+{% endif %}
+<div class="svg" id="paper">
+</div>
+{% include 'LthrtSchemaVisualizerBundle:Schema:graphjs.html.twig' with { 'depth' : depth } %}
